@@ -344,36 +344,20 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 </style>
 <style>
 /* ── REVERSAS MODULE ── */
+/* Variáveis extras usadas pelo módulo de reversas (sem conflito com o :root global) */
 #page-reversas .main{padding:0;}
   :root {
-    --bg:        #080C14;
     --surface:   #0E1420;
     --surface2:  #141B2D;
     --surface3:  #1A2340;
-    --border:    #1E2D4A;
-    --border2:   #243352;
-    --blue:      #2563EB;
     --blue-dark: #1A4FBF;
     --blue-glow: rgba(37,99,235,.18);
-    --orange:    #FF5A00;
-    --orange-dk: #D94D00;
     --orange-glow: rgba(255,90,0,.15);
-    --text:      #F0F4FF;
-    --text2:     #8B9DC3;
-    --text3:     #4A5A7A;
-    --green:     #10B981;
-    --amber:     #F59E0B;
-    --red:       #EF4444;
-    --purple:    #8B5CF6;
-    --teal:      #14B8A6;
-    --radius:    12px;
     --radius-sm: 8px;
     --radius-xs: 5px;
     --shadow:    0 4px 24px rgba(0,0,0,.4);
     --shadow-lg: 0 8px 40px rgba(0,0,0,.6);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
   /* ── LOADING ─────────────────────────────────────────────────── */
   .loading-overlay { position:fixed;inset:0;background:rgba(8,12,20,.95);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px; }
@@ -621,7 +605,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   .section-sub { font-size: 13px; color: var(--text3); margin-top: 2px; }
 
   @media (max-width: 800px) { .form-grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
-</style>
 </style>
 </head>
 <body>
@@ -1777,13 +1760,18 @@ function renderIndenizacoes() {
 // DASHBOARD
 // ══════════════════════════════════════════════
 async function loadDashboard() {
+  setLoading(true, 'Carregando painel...');
   // Stats de ocorrências
-  const { data: ocs } = await db.from('ocorrencias_ventisol').select('status,prioridade').limit(500);
+  let ocs = null;
+  try {
+    const { data } = await db.from('ocorrencias_ventisol').select('status,prioridade').limit(500);
+    ocs = data;
+  } catch(e) { /* tabela pode não existir ainda */ }
   if (ocs) {
     const abertas = ocs.filter(r => r.status === 'Aberta').length;
     document.getElementById('s-ocorrencias').textContent = abertas;
   } else {
-    document.getElementById('s-ocorrencias').textContent = '—';
+    document.getElementById('s-ocorrencias').textContent = '0';
   }
 
   // Placeholders para módulos ainda não implementados
@@ -1818,6 +1806,7 @@ async function loadDashboard() {
     timeline.innerHTML = `
       <div class="tl"><div class="tl-side"><div class="tl-dot" style="background:var(--blue)"></div></div><div class="tl-body"><div class="tl-title">Plataforma iniciada</div><div class="tl-time">agora</div><div class="tl-desc">Comece registrando ocorrências para ver a atividade aqui.</div></div></div>`;
   }
+  setLoading(false);
 }
 
 // ══════════════════════════════════════════════
@@ -2033,9 +2022,8 @@ let _filters = {
 };
 function sortBy(field) {
   const f = _filters.lista;
-  if((f.sortField||sortField) === field) f.sortDir = (f.sortDir||sortDir) * -1;
+  if((f.sortField || 'solicitada') === field) f.sortDir = (f.sortDir !== undefined ? f.sortDir : -1) * -1;
   else { f.sortField = field; f.sortDir = 1; }
-  sortField = f.sortField; sortDir = f.sortDir;
   renderLista();
 }
 
@@ -2181,6 +2169,7 @@ function renderLista() {
       <td><button class="link-btn" onclick="openDetalhe('${r.id}')">Ver</button> <button class="link-btn" style="color:var(--red)" onclick="excluir('${r.id}')">✕</button></td>
     </tr>`;
   }).join('');
+  updateActivePills('lista');
 }
 
 function populateFilterDropdowns() {
