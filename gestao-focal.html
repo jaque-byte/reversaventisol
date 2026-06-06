@@ -341,73 +341,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 /* ── TAGS ── */
 .tag{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:10px;color:var(--text2);}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
-
-/* ── OCORRÊNCIAS MODULE ──────────────────────────────────────────── */
-/* Fix transparência: garantir fundo sólido no modal-backdrop */
-.modal-backdrop .modal{background:#0E1420;}
-
-/* Pill toggles (radio-style, um ativo por grupo) */
-.oc-pills{display:flex;flex-wrap:wrap;gap:6px;}
-.oc-pill{
-  padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;
-  border:1.5px solid var(--border2);cursor:pointer;
-  background:var(--surf2);color:var(--text2);
-  transition:all .15s;user-select:none;
-}
-.oc-pill:hover:not(.active){border-color:var(--blue);color:var(--text);}
-.oc-pill.active{background:var(--blue);color:#fff;border-color:var(--blue);}
-.oc-pill.active[data-color="red"]{background:var(--red);border-color:var(--red);}
-.oc-pill.active[data-color="orange"]{background:var(--orange);border-color:var(--orange);}
-.oc-pill.active[data-color="amber"]{background:var(--amber);border-color:var(--amber);color:#111;}
-.oc-pill.active[data-color="green"]{background:var(--green);border-color:var(--green);}
-.oc-pill.active[data-color="purple"]{background:var(--purple);border-color:var(--purple);}
-.oc-pill.active[data-color="teal"]{background:var(--teal);border-color:var(--teal);}
-
-/* Tab bar */
-.oc-tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:2px;}
-.oc-tab{
-  padding:9px 20px;font-size:13px;font-weight:500;color:var(--text3);
-  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;
-  transition:color .15s,border-color .15s;
-}
-.oc-tab:hover{color:var(--text2);}
-.oc-tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600;}
-
-/* Cards grid */
-.oc-cards-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  gap:12px;padding:14px 0;
-}
-.oc-card{
-  background:var(--surf);border:1px solid var(--border);border-radius:var(--radius);
-  cursor:pointer;transition:border-color .15s,transform .1s;overflow:hidden;
-}
-.oc-card:hover{border-color:var(--border2);transform:translateY(-2px);}
-.oc-card-accent{height:3px;width:100%;}
-.oc-card-body{padding:12px 14px;}
-.oc-card-tipo{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
-.oc-card-nf{font-family:'Poppins',sans-serif;font-size:24px;font-weight:800;color:var(--text);line-height:1.1;}
-.oc-card-status{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin:3px 0 10px;}
-.oc-card-info{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.oc-card-footer{
-  padding:7px 14px;border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--surf2);
-}
-
-/* Produto row */
-.oc-produto-row{
-  background:var(--surf2);border:1px solid var(--border2);border-radius:var(--radius);
-  padding:10px 12px;position:relative;
-  display:flex;flex-direction:column;gap:8px;
-}
-.oc-prod-grid{display:grid;grid-template-columns:1fr 1fr 80px;gap:8px;}
-.oc-prod-grid2{display:grid;grid-template-columns:100px 1fr;gap:8px;}
-
-/* Stat cards clickable */
-.stat[onclick]{cursor:pointer;transition:border-color .15s;}
-.stat[onclick]:hover{border-color:var(--border2);}
-.oc-stat-active{border-color:var(--orange)!important;box-shadow:0 0 0 1px var(--orange);}
 </style>
 <style>
 /* ── REVERSAS MODULE ── */
@@ -689,6 +622,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
   @media (max-width: 800px) { .form-grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
 </style>
+</style>
 </head>
 <body>
 <div class="loading-overlay" id="loading-overlay">
@@ -969,10 +903,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
               <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Exportar
             </button>
-            <button class="btn btn-ghost btn-sm" onclick="toast('Em breve — aguardando modelo do cliente.','error')" title="Importar PDF padrão do cliente">
-              <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
-              Importar PDF
-            </button>
             <button class="btn btn-primary btn-sm" onclick="openModalOc()">
               <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Nova Ocorrência
@@ -981,41 +911,34 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         </div>
 
         <div class="stats-grid" id="oc-stats">
-          <div class="stat" id="oc-stat-abertas" onclick="setOcTab('abertas')">
-            <div class="stat-bar" style="background:var(--red)"></div>
-            <div class="stat-val" id="oc-s-abertas">—</div>
-            <div class="stat-label">Abertas</div>
-          </div>
-          <div class="stat" id="oc-stat-avaria" onclick="setOcTab('avaria')">
-            <div class="stat-bar" style="background:var(--orange)"></div>
-            <div class="stat-val" id="oc-s-avaria">—</div>
-            <div class="stat-label">Avaria</div>
-          </div>
-          <div class="stat" id="oc-stat-falta" onclick="setOcTab('falta')">
-            <div class="stat-bar" style="background:var(--amber)"></div>
-            <div class="stat-val" id="oc-s-falta">—</div>
-            <div class="stat-label">Falta</div>
-          </div>
-          <div class="stat" id="oc-stat-outros" onclick="setOcTab('outros')">
-            <div class="stat-bar" style="background:var(--text3)"></div>
-            <div class="stat-val" id="oc-s-outros">—</div>
-            <div class="stat-label">Outros</div>
-          </div>
+          <div class="stat"><div class="stat-bar" style="background:var(--red)"></div><div class="stat-val" id="oc-s-abertas">—</div><div class="stat-label">Abertas</div></div>
+          <div class="stat"><div class="stat-bar" style="background:var(--red)"></div><div class="stat-val" id="oc-s-criticas">—</div><div class="stat-label">Críticas</div><div class="stat-sub" style="color:var(--red)">atenção!</div></div>
+          <div class="stat"><div class="stat-bar" style="background:var(--amber)"></div><div class="stat-val" id="oc-s-analise">—</div><div class="stat-label">Em Análise</div></div>
+          <div class="stat"><div class="stat-bar" style="background:var(--green)"></div><div class="stat-val" id="oc-s-resolvidas">—</div><div class="stat-label">Resolvidas</div></div>
+          <div class="stat"><div class="stat-bar" style="background:var(--text3)"></div><div class="stat-val" id="oc-s-total">—</div><div class="stat-label">Total</div></div>
         </div>
 
-        <div class="oc-tab-bar">
-          <div class="oc-tab active" id="oc-tab-abertas" onclick="setOcTab('abertas')">Abertas</div>
-          <div class="oc-tab" id="oc-tab-avaria" onclick="setOcTab('avaria')">Avaria</div>
-          <div class="oc-tab" id="oc-tab-falta" onclick="setOcTab('falta')">Falta</div>
-          <div class="oc-tab" id="oc-tab-outros" onclick="setOcTab('outros')">Outros</div>
-        </div>
-
-        <div style="padding:12px 0 0;display:flex;gap:8px;align-items:center;">
-          <input class="tbl-search" type="text" id="oc-search" placeholder="Buscar por NF, cliente, unidade..." oninput="renderOcorrencias()" style="flex:1;max-width:360px;">
-        </div>
-
-        <div id="oc-painel-container">
-          <div class="loading"><div class="spinner"></div><span>Carregando ocorrências...</span></div>
+        <div class="tbl-wrap">
+          <div class="tbl-toolbar">
+            <input class="tbl-search" type="text" id="oc-search" placeholder="Buscar por NF, cliente, tipo, unidade..." oninput="renderOcorrencias()">
+            <select id="oc-filter-status" onchange="renderOcorrencias()" style="min-width:130px;">
+              <option value="">Todos os status</option>
+              <option value="Aberta">Aberta</option>
+              <option value="Em Análise">Em Análise</option>
+              <option value="Resolvida">Resolvida</option>
+              <option value="Encerrada">Encerrada</option>
+            </select>
+            <select id="oc-filter-prio" onchange="renderOcorrencias()" style="min-width:130px;">
+              <option value="">Todas prioridades</option>
+              <option value="Crítica">Crítica</option>
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+          </div>
+          <div id="oc-table-container">
+            <div class="loading"><div class="spinner"></div><span>Carregando ocorrências...</span></div>
+          </div>
         </div>
       </div>
 
@@ -1355,11 +1278,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
 <!-- ════════════════════════════════════════════
      MODAL: NOVA OCORRÊNCIA
-<!-- ════════════════════════════════════════════
-     MODAL: NOVA OCORRÊNCIA
 ════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="modal-oc" style="display:none;" onclick="if(event.target===this)closeModalOc()">
-  <div class="modal" style="max-width:640px;">
+  <div class="modal">
     <div class="modal-header">
       <span class="modal-title">Nova Ocorrência</span>
       <button class="btn btn-ghost btn-sm" onclick="closeModalOc()">
@@ -1368,7 +1289,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       </button>
     </div>
     <div class="modal-body">
-      <!-- CAMPOS FIXOS -->
       <div class="field-row">
         <div class="field">
           <label>Número da NF *</label>
@@ -1379,54 +1299,60 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
           <input type="date" id="oc-data">
         </div>
       </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Cliente Destinatário *</label>
-          <input type="text" id="oc-cliente" placeholder="Ex: Lojas Americanas">
-        </div>
-        <div class="field">
-          <label>CNPJ Destinatário</label>
-          <input type="text" id="oc-cnpj-dest" placeholder="00.000.000/0001-00">
-        </div>
+      <div class="field">
+        <label>Cliente / Destinatário *</label>
+        <input type="text" id="oc-cliente" placeholder="Ex: Lojas Americanas">
       </div>
       <div class="field-row">
         <div class="field">
-          <label>Cliente Remetente <span style="color:var(--text3);font-weight:400;">(via PDF)</span></label>
-          <input type="text" id="oc-remetente" placeholder="Ex: Ventisol Ind. Comércio">
+          <label>Tipo de Ocorrência *</label>
+          <select id="oc-tipo">
+            <option value="">Selecione...</option>
+            <option>Avaria na Carga</option>
+            <option>Extravio</option>
+            <option>Atraso na Entrega</option>
+            <option>Recusa do Cliente</option>
+            <option>Endereço Errado</option>
+            <option>Divergência de NF</option>
+            <option>Falta de Volumes</option>
+            <option>Agendamento não Cumprido</option>
+            <option>Outro</option>
+          </select>
         </div>
         <div class="field">
-          <label>CNPJ Remetente</label>
-          <input type="text" id="oc-cnpj-rem" placeholder="00.000.000/0001-00">
+          <label>Prioridade *</label>
+          <select id="oc-prioridade">
+            <option value="">Selecione...</option>
+            <option>Crítica</option>
+            <option>Alta</option>
+            <option>Média</option>
+            <option>Baixa</option>
+          </select>
         </div>
       </div>
-
-      <!-- PRIORIDADE -->
+      <div class="field-row">
+        <div class="field">
+          <label>Unidade Responsável</label>
+          <input type="text" id="oc-unidade" placeholder="Ex: CHA, JBA, CON">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="oc-status">
+            <option>Aberta</option>
+            <option>Em Análise</option>
+            <option>Resolvida</option>
+            <option>Encerrada</option>
+          </select>
+        </div>
+      </div>
       <div class="field">
-        <label>Prioridade *</label>
-        <div class="oc-pills" id="oc-prio-pills">
-          <button class="oc-pill" data-color="red" onclick="selectOcPill(this)">Crítica</button>
-          <button class="oc-pill" data-color="orange" onclick="selectOcPill(this)">Alta</button>
-          <button class="oc-pill" data-color="amber" onclick="selectOcPill(this)">Média</button>
-          <button class="oc-pill" onclick="selectOcPill(this)">Baixa</button>
-        </div>
+        <label>Descrição / Observações</label>
+        <textarea id="oc-obs" placeholder="Descreva a ocorrência com detalhes relevantes..."></textarea>
       </div>
-
-      <!-- TIPO -->
       <div class="field">
-        <label>Tipo de Ocorrência *</label>
-        <div class="oc-pills" id="oc-tipo-pills">
-          <button class="oc-pill" data-color="orange" data-tipo="Avaria" onclick="selectOcTipo(this)">Avaria</button>
-          <button class="oc-pill" data-color="amber" data-tipo="Falta" onclick="selectOcTipo(this)">Falta / Extravio</button>
-          <button class="oc-pill" data-color="blue" data-tipo="Atraso" onclick="selectOcTipo(this)">Atraso</button>
-          <button class="oc-pill" data-color="purple" data-tipo="Recusa" onclick="selectOcTipo(this)">Recusa</button>
-          <button class="oc-pill" data-tipo="Endereço Errado" onclick="selectOcTipo(this)">Endereço Errado</button>
-          <button class="oc-pill" data-tipo="Outro" onclick="selectOcTipo(this)">Outro</button>
-        </div>
-        <input type="hidden" id="oc-tipo-val">
+        <label>Solução / Tratativa</label>
+        <textarea id="oc-solucao" placeholder="Como foi ou será resolvido..." style="min-height:55px;"></textarea>
       </div>
-
-      <!-- SEÇÃO CONDICIONAL -->
-      <div id="oc-condicional" style="display:none;border-top:1px solid var(--border);margin-top:6px;padding-top:16px;display:flex;flex-direction:column;gap:14px;"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModalOc()">Cancelar</button>
@@ -1444,10 +1370,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <div class="modal-backdrop" id="modal-oc-detail" style="display:none;" onclick="if(event.target===this)closeDetailOc()">
   <div class="modal" style="max-width:600px;">
     <div class="modal-header">
-      <div>
-        <span class="modal-title" id="detail-oc-title"></span>
-        <div id="detail-oc-nf" style="font-size:12px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace;"></div>
-      </div>
+      <span class="modal-title" id="detail-oc-title">OC-001</span>
       <div style="display:flex;gap:6px;align-items:center;">
         <span id="detail-oc-prio" class="pill"></span>
         <button class="btn btn-ghost btn-sm" onclick="closeDetailOc()">Fechar</button>
@@ -1487,552 +1410,8 @@ function _initReversasOnce() {
 // STATE
 // ══════════════════════════════════════════════
 let ocorrencias = [];
-let ocActiveTab = 'abertas';
-let ocProdutoCount = 0;
-
-// ── Helpers ──────────────────────────────────────────────────────
-function ocTipoGrupo(tipo) {
-  if (!tipo) return 'outros';
-  const t = tipo.toLowerCase();
-  if (t === 'avaria') return 'avaria';
-  if (t === 'falta' || t.includes('extravio')) return 'falta';
-  return 'outros';
-}
-function ocIsAberta(r) { return !['Resolvida','Encerrada'].includes(r.status); }
-
-const OC_STATUS_COLOR = {
-  'Aberta':'var(--red)','Em Análise':'var(--amber)',
-  'Aguardando Reposição':'var(--red)','Reposição Enviada':'var(--blue)',
-  'Em Trânsito':'var(--blue)','Aguardando Entrega':'var(--amber)',
-  'Reposição Entregue':'var(--teal)','Aguardando Retirada':'var(--purple)',
-  'Resolvida':'var(--green)','Encerrada':'var(--text3)'
-};
-const OC_TIPO_COLOR = { avaria:'var(--orange)', falta:'var(--amber)', outros:'var(--text3)' };
-
-// ── TABS & STATS ─────────────────────────────────────────────────
-function setOcTab(tab) {
-  ocActiveTab = tab;
-  document.querySelectorAll('.oc-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('oc-tab-' + tab)?.classList.add('active');
-  ['abertas','avaria','falta','outros'].forEach(k => {
-    document.getElementById('oc-stat-' + k)?.classList.toggle('oc-stat-active', k === tab);
-  });
-  renderOcorrencias();
-}
-
-// ── LOAD ──────────────────────────────────────────────────────────
-async function loadOcorrencias() {
-  document.getElementById('oc-painel-container').innerHTML =
-    '<div class="loading"><div class="spinner"></div><span>Carregando ocorrências...</span></div>';
-  const { data, error } = await db.from('ocorrencias_ventisol').select('*').order('created_at', { ascending: false });
-  if (error) {
-    if (error.code === '42P01') { document.getElementById('oc-painel-container').innerHTML = ocSetupHTML(); }
-    else { document.getElementById('oc-painel-container').innerHTML = '<div class="empty"><div class="empty-title">Erro ao carregar</div><div class="empty-desc">' + error.message + '</div></div>'; }
-    return;
-  }
-  ocorrencias = data || [];
-  renderOcorrencias();
-  updateOcStats();
-  updateBadgeOc();
-}
-
-function ocSetupHTML() {
-  return `<div style="padding:28px 20px;text-align:center;">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.75" stroke-linecap="round" style="margin:0 auto 12px;display:block;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Tabela não encontrada</div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:18px;line-height:1.7;">Execute o SQL no Supabase (SQL Editor) para criar e migrar a tabela.</div>
-    <button class="btn btn-primary btn-sm" onclick="loadOcorrencias()">Tentar novamente</button>
-  </div>`;
-}
-
-// ── RENDER CARDS ──────────────────────────────────────────────────
-function renderOcorrencias() {
-  const search = (document.getElementById('oc-search')?.value || '').toLowerCase();
-  const tab = ocActiveTab;
-  let filtered = ocorrencias.filter(r => {
-    const g = ocTipoGrupo(r.tipo);
-    const matchTab = tab === 'abertas' ? ocIsAberta(r) : tab === 'avaria' ? g === 'avaria' : tab === 'falta' ? g === 'falta' : g === 'outros';
-    const matchSearch = !search || ((r.nf||'')+(r.cliente||'')+(r.tipo||'')+(r.unidade||'')+(r.unidade_responsavel||'')+(r.obs||'')).toLowerCase().includes(search);
-    return matchTab && matchSearch;
-  });
-
-  if (filtered.length === 0) {
-    document.getElementById('oc-painel-container').innerHTML =
-      '<div class="empty" style="margin-top:24px;"><div class="empty-title">Nenhuma ocorrência encontrada</div><div class="empty-desc">Ajuste os filtros ou registre uma nova ocorrência.</div></div>';
-    return;
-  }
-
-  const cards = filtered.map(r => {
-    const g = ocTipoGrupo(r.tipo);
-    const accent = OC_TIPO_COLOR[g];
-    const statusC = OC_STATUS_COLOR[r.status] || 'var(--text3)';
-    const prioC = {Crítica:'var(--red)',Alta:'var(--orange)',Média:'var(--amber)',Baixa:'var(--text3)'}[r.prioridade] || 'var(--text3)';
-    const flags = [(r.gatilho_indenizacao ? '⚡' : ''), (r.gatilho_reversa_dea ? '↩' : '')].filter(Boolean).join(' ');
-    return `<div class="oc-card" onclick="openDetailOc(${r.id})">
-      <div class="oc-card-accent" style="background:${accent}"></div>
-      <div class="oc-card-body">
-        <div class="oc-card-tipo">${r.tipo || '—'}</div>
-        <div class="oc-card-nf">#${r.nf}</div>
-        <div class="oc-card-status" style="color:${statusC}">${r.status || 'Aberta'}</div>
-        <div class="oc-card-info">${r.cliente || '—'}</div>
-        ${r.data_ocorrencia ? `<div class="oc-card-info" style="color:var(--text3)">${fmtDate(r.data_ocorrencia)}</div>` : ''}
-      </div>
-      <div class="oc-card-footer">
-        <span style="font-size:10px;font-weight:700;color:${prioC};">${r.prioridade||'—'}</span>
-        <span style="font-size:11px;color:var(--text3);">${flags}${r.unidade_responsavel||r.unidade||''}</span>
-      </div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('oc-painel-container').innerHTML = `<div class="oc-cards-grid">${cards}</div>`;
-}
-
-// ── STATS ─────────────────────────────────────────────────────────
-function updateOcStats() {
-  document.getElementById('oc-s-abertas').textContent = ocorrencias.filter(r => ocIsAberta(r)).length;
-  document.getElementById('oc-s-avaria').textContent = ocorrencias.filter(r => ocTipoGrupo(r.tipo) === 'avaria').length;
-  document.getElementById('oc-s-falta').textContent = ocorrencias.filter(r => ocTipoGrupo(r.tipo) === 'falta').length;
-  document.getElementById('oc-s-outros').textContent = ocorrencias.filter(r => ocTipoGrupo(r.tipo) === 'outros').length;
-}
-function updateBadgeOc() {
-  const n = ocorrencias.filter(r => ocIsAberta(r)).length;
-  const badge = document.getElementById('badge-oc');
-  if (!badge) return;
-  badge.textContent = n;
-  badge.style.display = n > 0 ? '' : 'none';
-  if (n > 0) { badge.style.background = 'var(--amber)'; badge.style.color = '#fff'; }
-}
-
-// ── PILL HELPERS ──────────────────────────────────────────────────
-function selectOcPill(btn) {
-  btn.closest('.oc-pills').querySelectorAll('.oc-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-}
-function selectOcTipo(btn) {
-  btn.closest('.oc-pills').querySelectorAll('.oc-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  const tipo = btn.dataset.tipo;
-  document.getElementById('oc-tipo-val').value = tipo;
-  renderCondicionalOc(tipo);
-}
-function selectOcRadio(btn, inputId) {
-  btn.closest('.oc-pills').querySelectorAll('.oc-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  const el = document.getElementById(inputId);
-  if (el) el.value = btn.dataset.val || btn.textContent.trim();
-}
-
-// ── CONDITIONAL SECTION ───────────────────────────────────────────
-function renderCondicionalOc(tipo) {
-  const el = document.getElementById('oc-condicional');
-  if (!tipo) { el.style.display = 'none'; el.innerHTML = ''; return; }
-  el.style.display = 'flex';
-  ocProdutoCount = 0;
-  const t = tipo.toLowerCase();
-
-  if (t === 'avaria' || t === 'falta') {
-    el.innerHTML = ocHtmlResolucao();
-  } else if (t === 'atraso') {
-    el.innerHTML = `
-      <div class="field"><label>Descrição</label>
-        <textarea id="oc-obs" placeholder="Motivo do atraso..." style="min-height:65px;"></textarea></div>
-      <div class="field" style="max-width:220px;"><label>Previsão ajustada</label>
-        <input type="date" id="oc-previsao-ajustada"></div>`;
-  } else if (t === 'recusa') {
-    el.innerHTML = `
-      <div class="field"><label>Motivo da recusa</label>
-        <div class="oc-pills">
-          <button class="oc-pill" data-color="orange" data-val="avaria" onclick="selectOcRadio(this,'oc-motivo-recusa');ocSubRecusa('avaria')">Avaria</button>
-          <button class="oc-pill" data-color="amber" data-val="falta" onclick="selectOcRadio(this,'oc-motivo-recusa');ocSubRecusa('falta')">Falta</button>
-          <button class="oc-pill" data-val="outro" onclick="selectOcRadio(this,'oc-motivo-recusa');ocSubRecusa('outro')">Outro</button>
-        </div>
-        <input type="hidden" id="oc-motivo-recusa">
-      </div>
-      <div id="oc-sub-recusa" style="display:none;flex-direction:column;gap:14px;"></div>`;
-  } else if (t === 'endereço errado') {
-    el.innerHTML = `
-      <div class="field"><label>Tipo de reentrega</label>
-        <div class="oc-pills">
-          <button class="oc-pill" data-color="blue" data-val="com_custo" onclick="selectOcRadio(this,'oc-reentrega-custo')">Com custo</button>
-          <button class="oc-pill" data-val="sem_custo" onclick="selectOcRadio(this,'oc-reentrega-custo')">Sem custo</button>
-        </div>
-        <input type="hidden" id="oc-reentrega-custo">
-      </div>
-      <div class="field"><label>Descrição</label>
-        <textarea id="oc-obs-end" placeholder="Detalhe o endereço e a tratativa..." style="min-height:65px;"></textarea></div>
-      <div class="field"><label>Situação</label>
-        <div class="oc-pills">
-          <button class="oc-pill" data-color="green" data-val="autorizada" onclick="selectOcRadio(this,'oc-situacao-end');ocSubEnd('autorizada')">Reentrega autorizada</button>
-          <button class="oc-pill" data-color="red" data-val="nao_autorizada" onclick="selectOcRadio(this,'oc-situacao-end');ocSubEnd('nao_autorizada')">Não autorizada</button>
-        </div>
-        <input type="hidden" id="oc-situacao-end">
-      </div>
-      <div id="oc-sub-end" style="display:none;flex-direction:column;gap:14px;"></div>`;
-  } else {
-    el.innerHTML = `<div class="field"><label>Descrição</label>
-      <textarea id="oc-obs" placeholder="Descreva a ocorrência..." style="min-height:80px;"></textarea></div>`;
-  }
-}
-
-function ocHtmlResolucao(prefix) {
-  const prefId = prefix || '';
-  return `
-    <div class="field"><label>Resolução</label>
-      <div class="oc-pills">
-        <button class="oc-pill" data-color="orange" data-val="reposicao" onclick="selectOcRadio(this,'oc-resolucao${prefId}');ocSubResolucao('reposicao','${prefId}')">Reposição solicitada</button>
-        <button class="oc-pill" data-color="blue" data-val="nfd" onclick="selectOcRadio(this,'oc-resolucao${prefId}');ocSubResolucao('nfd','${prefId}')">Cliente emitiu NFD</button>
-      </div>
-      <input type="hidden" id="oc-resolucao${prefId}">
-    </div>
-    <div id="oc-sub-resolucao${prefId}" style="display:none;flex-direction:column;gap:14px;"></div>`;
-}
-
-function ocSubRecusa(motivo) {
-  const sub = document.getElementById('oc-sub-recusa');
-  sub.style.display = 'flex';
-  if (motivo === 'avaria' || motivo === 'falta') {
-    sub.innerHTML = ocHtmlResolucao('-recusa');
-  } else {
-    sub.innerHTML = `<div class="field"><label>Descrição</label>
-      <textarea id="oc-obs-recusa" placeholder="Detalhe o motivo da recusa..." style="min-height:65px;"></textarea></div>`;
-  }
-}
-
-function ocSubEnd(situacao) {
-  const sub = document.getElementById('oc-sub-end');
-  sub.style.display = 'flex';
-  if (situacao === 'autorizada') {
-    sub.innerHTML = `<div class="field" style="max-width:220px;"><label>Nova previsão de entrega</label>
-      <input type="date" id="oc-previsao-ajustada"></div>`;
-  } else {
-    sub.innerHTML = `
-      <div class="field"><label>Encaminhamento</label>
-        <div class="oc-pills">
-          <button class="oc-pill" data-color="orange" data-val="devolucao" onclick="selectOcRadio(this,'oc-end-enc')">Devolução (DEA)</button>
-          <button class="oc-pill" data-val="retirada" onclick="selectOcRadio(this,'oc-end-enc')">Cliente retira</button>
-        </div>
-        <input type="hidden" id="oc-end-enc">
-      </div>`;
-  }
-}
-
-function ocSubResolucao(resolucao, prefix) {
-  const sub = document.getElementById('oc-sub-resolucao' + prefix);
-  sub.style.display = 'flex';
-  if (resolucao === 'reposicao') {
-    sub.innerHTML = `
-      <div class="field"><label>Produtos envolvidos</label>
-        <div id="oc-produtos-list${prefix}" style="display:flex;flex-direction:column;gap:8px;"></div>
-        <button class="btn btn-ghost btn-sm" onclick="addProdutoOc('oc-produtos-list${prefix}',true)" style="margin-top:6px;align-self:flex-start;">+ Produto</button>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Localização atual do volume</label>
-          <input type="text" id="oc-loc-vol${prefix}" placeholder="Ex: BLM" style="text-transform:uppercase;max-width:120px;"></div>
-      </div>
-      <div class="field"><label>Destino do volume</label>
-        <div class="oc-pills">
-          <button class="oc-pill" data-color="orange" data-val="retorno" onclick="selectOcRadio(this,'oc-destino${prefix}');ocToggleDestSigla('${prefix}',false)">Retorno DEA</button>
-          <button class="oc-pill" data-val="fica" onclick="selectOcRadio(this,'oc-destino${prefix}');ocToggleDestSigla('${prefix}',true)">Fica na unidade</button>
-          <button class="oc-pill" data-val="vai" onclick="selectOcRadio(this,'oc-destino${prefix}');ocToggleDestSigla('${prefix}',true)">Vai para</button>
-        </div>
-        <input type="hidden" id="oc-destino${prefix}">
-        <input type="text" id="oc-destino-sigla${prefix}" placeholder="Sigla ex: JVL" style="display:none;max-width:120px;margin-top:8px;text-transform:uppercase;">
-      </div>`;
-    addProdutoOc('oc-produtos-list' + prefix, true);
-  } else {
-    sub.innerHTML = `
-      <div class="field-row">
-        <div class="field"><label>Número da NFD</label>
-          <input type="text" id="oc-nfd-num${prefix}" placeholder="Ex: 181716"></div>
-        <div class="field"><label>Localização atual do volume</label>
-          <input type="text" id="oc-loc-vol${prefix}" placeholder="Ex: BLM" style="text-transform:uppercase;"></div>
-      </div>
-      <div class="field"><label>Produtos envolvidos</label>
-        <div id="oc-produtos-nfd-list${prefix}" style="display:flex;flex-direction:column;gap:8px;"></div>
-        <button class="btn btn-ghost btn-sm" onclick="addProdutoOc('oc-produtos-nfd-list${prefix}',false)" style="margin-top:6px;align-self:flex-start;">+ Produto</button>
-      </div>
-      <div class="field"><label>Destino do volume</label>
-        <div class="oc-pills">
-          <button class="oc-pill" data-color="orange" data-val="retorno" onclick="selectOcRadio(this,'oc-destino${prefix}');ocToggleDestSigla('${prefix}',false)">Retorno DEA</button>
-          <button class="oc-pill" data-val="fica" onclick="selectOcRadio(this,'oc-destino${prefix}');ocToggleDestSigla('${prefix}',true)">Fica na unidade</button>
-          <button class="oc-pill" data-val="vai" onclick="selectOcRadio(this,'oc-destino${prefix}');ocToggleDestSigla('${prefix}',true)">Vai para</button>
-        </div>
-        <input type="hidden" id="oc-destino${prefix}">
-        <input type="text" id="oc-destino-sigla${prefix}" placeholder="Sigla ex: JVL" style="display:none;max-width:120px;margin-top:8px;text-transform:uppercase;">
-      </div>`;
-    addProdutoOc('oc-produtos-nfd-list' + prefix, false);
-  }
-}
-
-function ocToggleDestSigla(prefix, show) {
-  const el = document.getElementById('oc-destino-sigla' + prefix);
-  if (el) el.style.display = show ? '' : 'none';
-}
-
-// ── PRODUTO ROWS ──────────────────────────────────────────────────
-function addProdutoOc(listId, withTipo) {
-  const list = document.getElementById(listId);
-  if (!list) return;
-  const id = ++ocProdutoCount;
-  const row = document.createElement('div');
-  row.className = 'oc-produto-row';
-  row.id = 'prod-' + id;
-  row.innerHTML = `
-    <div class="oc-prod-grid">
-      <div class="field" style="gap:3px;"><label style="font-size:10px;">Código</label><input type="text" class="oc-prod-cod" placeholder="7.500.001"></div>
-      <div class="field" style="gap:3px;"><label style="font-size:10px;">Nome curto</label><input type="text" class="oc-prod-nome" placeholder="VT-40 Tabela"></div>
-      <div class="field" style="gap:3px;"><label style="font-size:10px;">Qtd.</label><input type="number" class="oc-prod-qtd" value="1" min="1"></div>
-    </div>
-    <div class="oc-prod-grid2">
-      <div class="field" style="gap:3px;"><label style="font-size:10px;">Valor R$</label><input type="text" class="oc-prod-valor" placeholder="0,00"></div>
-      <div class="field" style="gap:3px;"><label style="font-size:10px;">Observação</label><input type="text" class="oc-prod-obs" placeholder="Opcional"></div>
-    </div>
-    ${withTipo ? `<div class="oc-pills" style="gap:4px;"><button class="oc-pill" data-val="peca" style="padding:3px 10px;font-size:10px;" onclick="selectOcRadio(this,'prod-tipo-${id}')">Peça</button><button class="oc-pill" data-val="master" style="padding:3px 10px;font-size:10px;" onclick="selectOcRadio(this,'prod-tipo-${id}')">Master</button><input type="hidden" id="prod-tipo-${id}"></div>` : ''}
-    <button onclick="document.getElementById('prod-${id}').remove()" style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;">✕</button>`;
-  list.appendChild(row);
-}
-
-function collectProdutos(listId) {
-  const list = document.getElementById(listId);
-  if (!list) return [];
-  return Array.from(list.querySelectorAll('.oc-produto-row')).map(row => ({
-    codigo: row.querySelector('.oc-prod-cod')?.value.trim() || '',
-    nome: row.querySelector('.oc-prod-nome')?.value.trim() || '',
-    qtd: parseInt(row.querySelector('.oc-prod-qtd')?.value) || 1,
-    valor: row.querySelector('.oc-prod-valor')?.value.trim() || '',
-    obs: row.querySelector('.oc-prod-obs')?.value.trim() || ''
-  })).filter(p => p.nome || p.codigo);
-}
-
-// ── MODAL OPEN/CLOSE ──────────────────────────────────────────────
-function openModalOc() {
-  ocProdutoCount = 0;
-  ['oc-nf','oc-cnpj-dest','oc-remetente','oc-cnpj-rem'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-  document.getElementById('oc-cliente').value = '';
-  document.getElementById('oc-data').value = new Date().toISOString().split('T')[0];
-  document.getElementById('oc-tipo-val').value = '';
-  const cond = document.getElementById('oc-condicional');
-  cond.innerHTML = ''; cond.style.display = 'none';
-  document.querySelectorAll('#modal-oc .oc-pill').forEach(p => p.classList.remove('active'));
-  document.getElementById('modal-oc').style.display = 'flex';
-}
-function closeModalOc() { document.getElementById('modal-oc').style.display = 'none'; }
-
-// ── SAVE ──────────────────────────────────────────────────────────
-async function salvarOcorrencia() {
-  const nf = document.getElementById('oc-nf').value.trim();
-  const cliente = document.getElementById('oc-cliente').value.trim();
-  const tipo = document.getElementById('oc-tipo-val').value;
-  const prioBtn = document.querySelector('#oc-prio-pills .oc-pill.active');
-  const prioridade = prioBtn ? prioBtn.textContent.trim() : '';
-
-  if (!nf || !cliente || !tipo || !prioridade) {
-    toast('Preencha: NF, Cliente Destinatário, Tipo e Prioridade', 'error'); return;
-  }
-
-  const rec = {
-    nf, cliente, tipo, prioridade,
-    cnpj_destinatario: document.getElementById('oc-cnpj-dest')?.value.trim() || null,
-    cliente_remetente: document.getElementById('oc-remetente')?.value.trim() || null,
-    cnpj_remetente: document.getElementById('oc-cnpj-rem')?.value.trim() || null,
-    data_ocorrencia: document.getElementById('oc-data')?.value || null,
-    status: 'Aberta',
-    gatilho_indenizacao: false,
-    gatilho_reversa_dea: false,
-  };
-
-  const t = tipo.toLowerCase();
-  const prefix = '';
-
-  function applyResolucao(pfx) {
-    const resolucao = document.getElementById('oc-resolucao' + pfx)?.value;
-    rec.resolucao_tipo = resolucao || null;
-    if (resolucao === 'reposicao') {
-      rec.produtos = collectProdutos('oc-produtos-list' + pfx);
-      rec.localizacao_volume = document.getElementById('oc-loc-vol' + pfx)?.value.trim().toUpperCase() || null;
-      const dest = document.getElementById('oc-destino' + pfx)?.value;
-      rec.destino_volume = dest || null;
-      rec.destino_volume_sigla = document.getElementById('oc-destino-sigla' + pfx)?.value.trim().toUpperCase() || null;
-      rec.gatilho_indenizacao = true;
-      rec.gatilho_reversa_dea = dest === 'retorno';
-      rec.status = 'Aguardando Reposição';
-    } else if (resolucao === 'nfd') {
-      rec.nfd_numero = document.getElementById('oc-nfd-num' + pfx)?.value.trim() || null;
-      rec.localizacao_volume = document.getElementById('oc-loc-vol' + pfx)?.value.trim().toUpperCase() || null;
-      rec.produtos = collectProdutos('oc-produtos-nfd-list' + pfx);
-      const dest = document.getElementById('oc-destino' + pfx)?.value;
-      rec.destino_volume = dest || null;
-      rec.destino_volume_sigla = document.getElementById('oc-destino-sigla' + pfx)?.value.trim().toUpperCase() || null;
-      rec.gatilho_reversa_dea = dest === 'retorno';
-      rec.status = dest === 'retorno' ? 'Resolvida' : 'Aberta';
-    }
-  }
-
-  if (t === 'avaria' || t === 'falta') {
-    applyResolucao(prefix);
-  } else if (t === 'atraso') {
-    rec.obs = document.getElementById('oc-obs')?.value.trim() || null;
-    rec.previsao_ajustada = document.getElementById('oc-previsao-ajustada')?.value || null;
-  } else if (t === 'recusa') {
-    rec.motivo_recusa = document.getElementById('oc-motivo-recusa')?.value || null;
-    applyResolucao('-recusa');
-    if (!rec.resolucao_tipo) rec.obs = document.getElementById('oc-obs-recusa')?.value.trim() || null;
-  } else if (t === 'endereço errado') {
-    rec.reentrega_com_custo = document.getElementById('oc-reentrega-custo')?.value === 'com_custo';
-    rec.obs = document.getElementById('oc-obs-end')?.value.trim() || null;
-    const sit = document.getElementById('oc-situacao-end')?.value;
-    if (sit === 'autorizada') {
-      rec.previsao_ajustada = document.getElementById('oc-previsao-ajustada')?.value || null;
-    } else if (sit === 'nao_autorizada') {
-      const enc = document.getElementById('oc-end-enc')?.value;
-      rec.destino_volume = enc || null;
-      if (enc === 'devolucao') { rec.gatilho_reversa_dea = true; rec.status = 'Resolvida'; }
-      else if (enc === 'retirada') rec.status = 'Aguardando Retirada';
-    }
-  } else {
-    rec.obs = document.getElementById('oc-obs')?.value.trim() || null;
-  }
-
-  const btn = document.getElementById('btn-salvar-oc');
-  btn.disabled = true; btn.textContent = 'Salvando...';
-  const { error } = await db.from('ocorrencias_ventisol').insert(rec);
-  btn.disabled = false;
-  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar Ocorrência';
-
-  if (error) { toast('Erro ao salvar: ' + error.message, 'error'); return; }
-  let msg = 'Ocorrência registrada!';
-  if (rec.gatilho_indenizacao) msg += ' Flag de indenização ativada.';
-  if (rec.gatilho_reversa_dea) msg += ' Retorno DEA pendente.';
-  toast(msg);
-  closeModalOc();
-  loadOcorrencias();
-}
-
-// ── DETAIL MODAL ──────────────────────────────────────────────────
-function openDetailOc(id) {
-  const r = ocorrencias.find(o => o.id === id);
-  if (!r) return;
-  const g = ocTipoGrupo(r.tipo);
-  const accent = OC_TIPO_COLOR[g];
-  const statusC = OC_STATUS_COLOR[r.status] || 'var(--text3)';
-  const prioMap = {Crítica:'pill-red',Alta:'pill-orange',Média:'pill-amber',Baixa:'pill-gray'};
-
-  document.getElementById('detail-oc-title').textContent = r.tipo || 'Ocorrência';
-  document.getElementById('detail-oc-nf').textContent = 'NF #' + r.nf;
-  document.getElementById('detail-oc-prio').className = 'pill ' + (prioMap[r.prioridade]||'pill-gray');
-  document.getElementById('detail-oc-prio').textContent = r.prioridade || '';
-
-  let body = `<div style="height:3px;background:${accent};margin:-22px -26px 18px;border-radius:0;"></div>`;
-  body += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-    <span style="font-size:13px;font-weight:700;color:${statusC};text-transform:uppercase;letter-spacing:.4px;">${r.status||'Aberta'}</span>
-    ${r.gatilho_indenizacao ? '<span class="pill pill-orange" title="Flag indenização">⚡ Indenização</span>' : ''}
-    ${r.gatilho_reversa_dea ? '<span class="pill pill-amber" title="Retorno DEA pendente">↩ DEA</span>' : ''}
-  </div>`;
-
-  body += `<div class="info-box" style="margin-bottom:14px;"><div class="info-box-title">Informações</div>
-    <div class="info-row"><span class="info-key">Destinatário</span><span class="info-val">${r.cliente||'—'}</span></div>
-    ${r.cnpj_destinatario ? `<div class="info-row"><span class="info-key">CNPJ Dest.</span><span class="info-val mono">${r.cnpj_destinatario}</span></div>` : ''}
-    ${r.cliente_remetente ? `<div class="info-row"><span class="info-key">Remetente</span><span class="info-val">${r.cliente_remetente}</span></div>` : ''}
-    ${r.cnpj_remetente ? `<div class="info-row"><span class="info-key">CNPJ Rem.</span><span class="info-val mono">${r.cnpj_remetente}</span></div>` : ''}
-    <div class="info-row"><span class="info-key">Data</span><span class="info-val mono">${r.data_ocorrencia ? fmtDate(r.data_ocorrencia) : '—'}</span></div>
-    ${r.resolucao_tipo ? `<div class="info-row"><span class="info-key">Resolução</span><span class="info-val">${r.resolucao_tipo === 'reposicao' ? 'Reposição' : 'NFD emitida'}</span></div>` : ''}
-    ${r.localizacao_volume ? `<div class="info-row"><span class="info-key">Localiz. volume</span><span class="info-val mono">${r.localizacao_volume}</span></div>` : ''}
-    ${r.nfd_numero ? `<div class="info-row"><span class="info-key">NFD Nº</span><span class="info-val mono">${r.nfd_numero}</span></div>` : ''}
-    ${r.nf_cobranca ? `<div class="info-row"><span class="info-key">NF Cobrança</span><span class="info-val mono">${r.nf_cobranca}</span></div>` : ''}
-    ${r.doc_transporte ? `<div class="info-row"><span class="info-key">Doc. Transporte</span><span class="info-val mono">${r.doc_transporte}</span></div>` : ''}
-    ${r.unidade_responsavel ? `<div class="info-row"><span class="info-key">Unid. Resp.</span><span class="info-val mono">${r.unidade_responsavel}</span></div>` : ''}
-    <div class="info-row"><span class="info-key">Registrado</span><span class="info-val mono">${fmtDateTime(r.created_at)}</span></div>
-  </div>`;
-
-  if (r.produtos && Array.isArray(r.produtos) && r.produtos.length > 0) {
-    body += `<div class="info-box" style="margin-bottom:14px;"><div class="info-box-title">Produtos</div>
-      <table style="width:100%;font-size:11px;border-collapse:collapse;">
-        <thead><tr style="color:var(--text3);"><th style="text-align:left;padding:3px 6px 3px 0;">Cód.</th><th style="text-align:left;padding:3px 6px;">Nome</th><th style="text-align:right;padding:3px 0 3px 6px;">Qtd.</th><th style="text-align:right;padding:3px 0 3px 6px;">Valor</th></tr></thead>
-        <tbody>${r.produtos.map(p => `<tr style="border-top:1px solid var(--border);"><td style="padding:4px 6px 4px 0;color:var(--text3);">${p.codigo||'—'}</td><td style="padding:4px 6px;">${p.nome||'—'}</td><td style="padding:4px 0 4px 6px;text-align:right;">${p.qtd||1}</td><td style="padding:4px 0 4px 6px;text-align:right;">${p.valor?'R$ '+p.valor:'—'}</td></tr>`).join('')}</tbody>
-      </table></div>`;
-  }
-
-  if (r.obs) body += `<div class="info-box" style="margin-bottom:14px;"><div class="info-box-title">Observações</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">${r.obs}</div></div>`;
-
-  // Status update
-  const nexts = ocNextStatuses(r);
-  if (nexts.length > 0) {
-    body += `<div class="field"><label>Alterar Status</label>
-      <div class="oc-pills" id="det-status-pills">
-        ${nexts.map(s => `<button class="oc-pill${r.status===s?' active':''}" data-status="${s}" onclick="ocDetSelectStatus(this)">${s}</button>`).join('')}
-      </div>
-      <input type="hidden" id="det-status-val" value="${r.status||''}">
-    </div>
-    <div id="det-extra-fields" style="display:flex;flex-direction:column;gap:10px;margin-top:4px;"></div>`;
-  }
-
-  document.getElementById('detail-oc-body').innerHTML = body;
-  document.getElementById('detail-oc-footer').innerHTML = `
-    <button class="btn btn-danger btn-sm" onclick="deleteOc(${r.id})">Excluir</button>
-    <div style="flex:1"></div>
-    <button class="btn btn-ghost" onclick="closeDetailOc()">Fechar</button>
-    ${nexts.length > 0 ? `<button class="btn btn-primary" onclick="updateOcStatus(${r.id})">Salvar</button>` : ''}`;
-
-  document.getElementById('modal-oc-detail').style.display = 'flex';
-}
-
-function ocDetSelectStatus(btn) {
-  btn.closest('.oc-pills').querySelectorAll('.oc-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  const s = btn.dataset.status;
-  document.getElementById('det-status-val').value = s;
-  const extra = document.getElementById('det-extra-fields');
-  extra.innerHTML = '';
-  if (s === 'Reposição Enviada') {
-    extra.innerHTML = `<div class="field-row"><div class="field"><label>NF de Cobrança</label><input type="text" id="extra-nf-cobranca" placeholder="Nº da NF"></div><div class="field"><label>Vencimento</label><input type="date" id="extra-vencimento"></div></div><div class="field"><label>Doc. Transporte (CTE/SUB/CTRC)</label><input type="text" id="extra-doc-transporte" placeholder="Ex: CTE 12345"></div>`;
-  } else if (s === 'Resolvida') {
-    extra.innerHTML = `<div class="field"><label>Unidade Responsável (custo)</label><input type="text" id="extra-uni-resp" placeholder="Ex: JVL" style="max-width:120px;text-transform:uppercase;"></div>`;
-  }
-}
-
-function ocNextStatuses(r) {
-  const t = (r.tipo||'').toLowerCase();
-  const res = r.resolucao_tipo;
-  const cur = r.status||'Aberta';
-  if (['Resolvida','Encerrada'].includes(cur)) return ['Encerrada'];
-  if ((t === 'avaria' || t === 'falta') && res === 'reposicao') {
-    const flow = ['Aguardando Reposição','Reposição Enviada','Em Trânsito','Aguardando Entrega','Reposição Entregue','Resolvida'];
-    const i = flow.indexOf(cur);
-    return i >= 0 && i < flow.length-1 ? [flow[i+1],'Encerrada'] : ['Resolvida','Encerrada'];
-  }
-  if (cur === 'Aguardando Retirada') return ['Resolvida','Encerrada'];
-  return ['Em Análise','Resolvida','Encerrada'];
-}
-
-function closeDetailOc() { document.getElementById('modal-oc-detail').style.display = 'none'; }
-
-async function updateOcStatus(id) {
-  const s = document.getElementById('det-status-val')?.value;
-  if (!s) return;
-  const upd = { status: s, updated_at: new Date().toISOString() };
-  const nfCob = document.getElementById('extra-nf-cobranca');
-  const venc = document.getElementById('extra-vencimento');
-  const docT = document.getElementById('extra-doc-transporte');
-  const uniR = document.getElementById('extra-uni-resp');
-  if (nfCob?.value) upd.nf_cobranca = nfCob.value.trim();
-  if (venc?.value) upd.vencimento_cobranca = venc.value;
-  if (docT?.value) upd.doc_transporte = docT.value.trim();
-  if (uniR?.value) upd.unidade_responsavel = uniR.value.trim().toUpperCase();
-  const { error } = await db.from('ocorrencias_ventisol').update(upd).eq('id', id);
-  if (error) { toast('Erro: ' + error.message, 'error'); return; }
-  toast('Status atualizado!');
-  closeDetailOc();
-  loadOcorrencias();
-}
-
-async function deleteOc(id) {
-  if (!confirm('Excluir esta ocorrência? Esta ação não pode ser desfeita.')) return;
-  const { error } = await db.from('ocorrencias_ventisol').delete().eq('id', id);
-  if (error) { toast('Erro: ' + error.message, 'error'); return; }
-  toast('Ocorrência excluída.');
-  closeDetailOc();
-  loadOcorrencias();
-}
+let indenizacoes = [];
+let currentOcDetail = null;
 
 // ══════════════════════════════════════════════
 // NAVEGAÇÃO
@@ -2098,17 +1477,369 @@ function filterTable(tableId, query) {
   });
 }
 
+// ══════════════════════════════════════════════
+// SUPABASE — SETUP TABELA OCORRÊNCIAS
+// ══════════════════════════════════════════════
+async function setupOcorrenciasTable() {
+  // Testa se a tabela existe tentando ler
+  const { error } = await db.from('ocorrencias_ventisol').select('id').limit(1);
+  if (error && error.code === '42P01') {
+    // Tabela não existe — criar via RPC não é possível no anon key
+    // Retorna false para indicar que precisa ser criada manualmente
+    return false;
+  }
+  return true;
+}
+
+// ══════════════════════════════════════════════
+// OCORRÊNCIAS — LOAD
+// ══════════════════════════════════════════════
+async function loadOcorrencias() {
+  document.getElementById('oc-table-container').innerHTML =
+    '<div class="loading"><div class="spinner"></div><span>Carregando ocorrências...</span></div>';
+
+  const { data, error } = await db
+    .from('ocorrencias_ventisol')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    if (error.code === '42P01') {
+      document.getElementById('oc-table-container').innerHTML = setupRequiredHTML();
+    } else {
+      document.getElementById('oc-table-container').innerHTML =
+        '<div class="empty"><div class="empty-title">Erro ao carregar</div><div class="empty-desc">' + error.message + '</div></div>';
+    }
+    return;
+  }
+
+  ocorrencias = data || [];
+  renderOcorrencias();
+  updateOcStats();
+  updateBadgeOc();
+}
+
+function setupRequiredHTML() {
+  return `<div style="padding:28px 20px;text-align:center;">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.75" stroke-linecap="round" style="margin:0 auto 12px;display:block;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Tabela não encontrada</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:18px;line-height:1.7;">Execute o SQL abaixo no Supabase (SQL Editor) para criar a tabela:</div>
+    <div style="background:var(--surf3);border:1px solid var(--border2);border-radius:8px;padding:14px;text-align:left;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:14px;">
+create table ocorrencias_ventisol (<br>
+&nbsp;&nbsp;id bigint generated always as identity primary key,<br>
+&nbsp;&nbsp;nf text not null,<br>
+&nbsp;&nbsp;cliente text not null,<br>
+&nbsp;&nbsp;tipo text not null,<br>
+&nbsp;&nbsp;prioridade text not null,<br>
+&nbsp;&nbsp;status text not null default 'Aberta',<br>
+&nbsp;&nbsp;unidade text,<br>
+&nbsp;&nbsp;data_ocorrencia date,<br>
+&nbsp;&nbsp;obs text,<br>
+&nbsp;&nbsp;solucao text,<br>
+&nbsp;&nbsp;created_at timestamptz default now(),<br>
+&nbsp;&nbsp;updated_at timestamptz default now()<br>
+);<br><br>
+alter table ocorrencias_ventisol enable row level security;<br>
+create policy "anon all" on ocorrencias_ventisol for all using (true) with check (true);
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="loadOcorrencias()">Tentar novamente</button>
+  </div>`;
+}
+
+function renderOcorrencias() {
+  const search = (document.getElementById('oc-search')?.value || '').toLowerCase();
+  const filterStatus = document.getElementById('oc-filter-status')?.value || '';
+  const filterPrio = document.getElementById('oc-filter-prio')?.value || '';
+
+  let filtered = ocorrencias.filter(r => {
+    const matchSearch = !search || (r.nf+r.cliente+r.tipo+r.unidade+r.obs).toLowerCase().includes(search);
+    const matchStatus = !filterStatus || r.status === filterStatus;
+    const matchPrio = !filterPrio || r.prioridade === filterPrio;
+    return matchSearch && matchStatus && matchPrio;
+  });
+
+  const pillMap = {
+    'Crítica':'pill-red','Alta':'pill-orange','Média':'pill-amber','Baixa':'pill-gray',
+    'Aberta':'pill-red','Em Análise':'pill-amber','Resolvida':'pill-green','Encerrada':'pill-gray'
+  };
+
+  if (filtered.length === 0) {
+    document.getElementById('oc-table-container').innerHTML =
+      '<div class="empty"><div class="empty-title">Nenhuma ocorrência encontrada</div><div class="empty-desc">Tente ajustar os filtros ou registre uma nova ocorrência.</div></div>';
+    return;
+  }
+
+  const rows = filtered.map(r => `
+    <tr onclick="openDetailOc(${r.id})">
+      <td class="mono text3">OC-${String(r.id).padStart(3,'0')}</td>
+      <td class="mono">#${r.nf}</td>
+      <td>${r.cliente}</td>
+      <td class="text2">${r.tipo}</td>
+      <td><span class="pill ${pillMap[r.prioridade]||'pill-gray'}">${r.prioridade}</span></td>
+      <td><span class="pill ${pillMap[r.status]||'pill-gray'}">${r.status}</span></td>
+      <td class="text3">${r.unidade||'—'}</td>
+      <td class="mono text3">${r.data_ocorrencia ? fmtDate(r.data_ocorrencia) : '—'}</td>
+      <td>
+        <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openDetailOc(${r.id})">Ver</button>
+      </td>
+    </tr>`).join('');
+
+  document.getElementById('oc-table-container').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>ID</th><th>NF</th><th>Cliente</th><th>Tipo</th>
+        <th>Prioridade</th><th>Status</th><th>Unidade</th><th>Data</th><th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function updateOcStats() {
+  const abertas = ocorrencias.filter(r => r.status === 'Aberta').length;
+  const criticas = ocorrencias.filter(r => r.prioridade === 'Crítica').length;
+  const analise = ocorrencias.filter(r => r.status === 'Em Análise').length;
+  const resolvidas = ocorrencias.filter(r => r.status === 'Resolvida').length;
+  document.getElementById('oc-s-abertas').textContent = abertas;
+  document.getElementById('oc-s-criticas').textContent = criticas;
+  document.getElementById('oc-s-analise').textContent = analise;
+  document.getElementById('oc-s-resolvidas').textContent = resolvidas;
+  document.getElementById('oc-s-total').textContent = ocorrencias.length;
+}
+
+function updateBadgeOc() {
+  const abertas = ocorrencias.filter(r => r.status === 'Aberta' || r.status === 'Em Análise').length;
+  const badge = document.getElementById('badge-oc');
+  badge.textContent = abertas;
+  badge.style.display = abertas > 0 ? '' : 'none';
+  if (abertas > 0) { badge.style.background = 'var(--amber)'; badge.style.color = '#fff'; }
+}
+
+// ══════════════════════════════════════════════
+// MODAL NOVA OCORRÊNCIA
+// ══════════════════════════════════════════════
+function openModalOc() {
+  document.getElementById('oc-nf').value = '';
+  document.getElementById('oc-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('oc-cliente').value = '';
+  document.getElementById('oc-tipo').value = '';
+  document.getElementById('oc-prioridade').value = '';
+  document.getElementById('oc-unidade').value = '';
+  document.getElementById('oc-status').value = 'Aberta';
+  document.getElementById('oc-obs').value = '';
+  document.getElementById('oc-solucao').value = '';
+  document.getElementById('modal-oc').style.display = 'flex';
+}
+function closeModalOc() { document.getElementById('modal-oc').style.display = 'none'; }
+
+async function salvarOcorrencia() {
+  const nf = document.getElementById('oc-nf').value.trim();
+  const cliente = document.getElementById('oc-cliente').value.trim();
+  const tipo = document.getElementById('oc-tipo').value;
+  const prioridade = document.getElementById('oc-prioridade').value;
+
+  if (!nf || !cliente || !tipo || !prioridade) {
+    toast('Preencha os campos obrigatórios (NF, Cliente, Tipo, Prioridade)', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-salvar-oc');
+  btn.disabled = true;
+  btn.textContent = 'Salvando...';
+
+  const { error } = await db.from('ocorrencias_ventisol').insert({
+    nf, cliente, tipo, prioridade,
+    status: document.getElementById('oc-status').value,
+    unidade: document.getElementById('oc-unidade').value.trim().toUpperCase() || null,
+    data_ocorrencia: document.getElementById('oc-data').value || null,
+    obs: document.getElementById('oc-obs').value.trim() || null,
+    solucao: document.getElementById('oc-solucao').value.trim() || null,
+  });
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar Ocorrência';
+
+  if (error) { toast('Erro ao salvar: ' + error.message, 'error'); return; }
+
+  toast('Ocorrência registrada com sucesso!');
+  closeModalOc();
+  loadOcorrencias();
+}
+
+// ══════════════════════════════════════════════
+// MODAL DETALHE OCORRÊNCIA
+// ══════════════════════════════════════════════
+function openDetailOc(id) {
+  const r = ocorrencias.find(o => o.id === id);
+  if (!r) return;
+  currentOcDetail = r;
+
+  const pillMap = {'Crítica':'pill-red','Alta':'pill-orange','Média':'pill-amber','Baixa':'pill-gray'};
+  const statusMap = {'Aberta':'pill-red','Em Análise':'pill-amber','Resolvida':'pill-green','Encerrada':'pill-gray'};
+
+  document.getElementById('detail-oc-title').textContent = 'OC-' + String(r.id).padStart(3,'0') + ' · NF #' + r.nf;
+  document.getElementById('detail-oc-prio').className = 'pill ' + (pillMap[r.prioridade]||'pill-gray');
+  document.getElementById('detail-oc-prio').textContent = r.prioridade;
+
+  document.getElementById('detail-oc-body').innerHTML = `
+    <div class="info-box">
+      <div class="info-box-title">Informações</div>
+      <div class="info-row"><span class="info-key">Cliente</span><span class="info-val">${r.cliente}</span></div>
+      <div class="info-row"><span class="info-key">Tipo</span><span class="info-val">${r.tipo}</span></div>
+      <div class="info-row"><span class="info-key">Status</span><span class="info-val"><span class="pill ${statusMap[r.status]||'pill-gray'}">${r.status}</span></span></div>
+      <div class="info-row"><span class="info-key">Unidade</span><span class="info-val">${r.unidade||'—'}</span></div>
+      <div class="info-row"><span class="info-key">Data</span><span class="info-val mono">${r.data_ocorrencia ? fmtDate(r.data_ocorrencia) : '—'}</span></div>
+      <div class="info-row"><span class="info-key">Registrado em</span><span class="info-val mono">${fmtDateTime(r.created_at)}</span></div>
+    </div>
+    ${r.obs ? `<div class="info-box"><div class="info-box-title">Descrição</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">${r.obs}</div></div>` : ''}
+    ${r.solucao ? `<div class="info-box"><div class="info-box-title">Tratativa / Solução</div><div style="font-size:12px;color:var(--text2);line-height:1.6;">${r.solucao}</div></div>` : ''}
+    <div class="field">
+      <label>Alterar Status</label>
+      <select id="detail-status-select" style="max-width:200px;">
+        <option ${r.status==='Aberta'?'selected':''}>Aberta</option>
+        <option ${r.status==='Em Análise'?'selected':''}>Em Análise</option>
+        <option ${r.status==='Resolvida'?'selected':''}>Resolvida</option>
+        <option ${r.status==='Encerrada'?'selected':''}>Encerrada</option>
+      </select>
+    </div>`;
+
+  document.getElementById('detail-oc-footer').innerHTML = `
+    <button class="btn btn-danger btn-sm" onclick="deleteOc(${r.id})">Excluir</button>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="closeDetailOc()">Fechar</button>
+    <button class="btn btn-primary" onclick="updateOcStatus(${r.id})">Salvar Status</button>`;
+
+  document.getElementById('modal-oc-detail').style.display = 'flex';
+}
+function closeDetailOc() { document.getElementById('modal-oc-detail').style.display = 'none'; }
+
+async function updateOcStatus(id) {
+  const newStatus = document.getElementById('detail-status-select').value;
+  const { error } = await db
+    .from('ocorrencias_ventisol')
+    .update({ status: newStatus, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) { toast('Erro ao atualizar: ' + error.message, 'error'); return; }
+  toast('Status atualizado!');
+  closeDetailOc();
+  loadOcorrencias();
+}
+
+async function deleteOc(id) {
+  if (!confirm('Excluir esta ocorrência? Esta ação não pode ser desfeita.')) return;
+  const { error } = await db.from('ocorrencias_ventisol').delete().eq('id', id);
+  if (error) { toast('Erro ao excluir: ' + error.message, 'error'); return; }
+  toast('Ocorrência excluída.');
+  closeDetailOc();
+  loadOcorrencias();
+}
+
+// ══════════════════════════════════════════════
+// INDENIZAÇÕES — LOAD (tabela futura)
+// ══════════════════════════════════════════════
+async function loadIndenizacoes() {
+  const { data, error } = await db
+    .from('indenizacoes_ventisol')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    // Mostra dados de exemplo enquanto tabela não existe
+    renderIndenizacoesDemo();
+    return;
+  }
+  indenizacoes = data || [];
+  renderIndenizacoes();
+}
+
+function renderIndenizacoesDemo() {
+  document.getElementById('ind-s-pendentes').textContent = '4';
+  document.getElementById('ind-s-vencendo').textContent = '2';
+  document.getElementById('ind-s-aberto').textContent = 'R$ 1.290';
+  document.getElementById('ind-s-pagas').textContent = 'R$ 3.840';
+
+  document.getElementById('ind-table-container').innerHTML = `
+    <table>
+      <thead><tr><th>Ref.</th><th>Ocorrência</th><th>NF</th><th>Motivo</th><th>Valor</th><th>Boleto</th><th>Vencimento</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="mono text3">IND-001</td><td class="mono">OC-001</td><td class="mono">#4276</td><td>Avaria</td><td class="mono">R$ 540,00</td><td><span class="pill pill-amber">Aguardando</span></td><td class="mono">—</td><td><span class="pill pill-amber">Pendente</span></td></tr>
+        <tr><td class="mono text3">IND-002</td><td class="mono">OC-004</td><td class="mono">#5512</td><td>Extravio</td><td class="mono">R$ 750,00</td><td><span class="pill pill-green">Gerado</span></td><td class="mono" style="color:var(--amber)">08/06</td><td><span class="pill pill-red">Vencendo</span></td></tr>
+        <tr><td class="mono text3">IND-003</td><td class="mono">OC-003</td><td class="mono">#3890</td><td>Recusa</td><td class="mono">R$ 180,00</td><td><span class="pill pill-green">Gerado</span></td><td class="mono">20/06</td><td><span class="pill pill-green">Em Dia</span></td></tr>
+      </tbody>
+    </table>`;
+}
+
+function renderIndenizacoes() {
+  if (indenizacoes.length === 0) { renderIndenizacoesDemo(); return; }
+  // render real quando tiver dados
+}
+
+// ══════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════
+async function loadDashboard() {
+  setLoading(true, 'Carregando painel...');
+  // Stats de ocorrências
+  const { data: ocs } = await db.from('ocorrencias_ventisol').select('status,prioridade').limit(500);
+  if (ocs) {
+    const abertas = ocs.filter(r => r.status === 'Aberta').length;
+    document.getElementById('s-ocorrencias').textContent = abertas;
+  } else {
+    document.getElementById('s-ocorrencias').textContent = '—';
+  }
+
+  // Placeholders para módulos ainda não implementados
+  document.getElementById('s-transito').textContent = '47';
+  document.getElementById('s-reversas').textContent = '7';
+  document.getElementById('s-atraso').textContent = '3';
+  document.getElementById('s-indenizacoes').textContent = '4';
+
+  // Alertas
+  const alerts = document.getElementById('dash-alerts');
+  alerts.innerHTML = `
+    <div class="alert" style="--alert-color:var(--red)">
+      <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="alert-body"><div class="alert-title">Agendamento crítico — NF #5512 → Unidade CHA</div><div class="alert-desc">Chapecó tem agendamento para hoje. Verificar viabilidade ou solicitar cancelamento.</div></div>
+      <div class="alert-actions"><button class="btn btn-ghost btn-xs" onclick="navTo('coletas')">Ver</button></div>
+    </div>
+    <div class="alert" style="--alert-color:var(--amber)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div class="alert-body"><div class="alert-title">3 CTEs em atraso sem baixa</div><div class="alert-desc">Unidades JBA e CON com ocorrências não registradas. Ação necessária.</div></div>
+      <div class="alert-actions"><button class="btn btn-ghost btn-xs" onclick="navTo('monitoramento')">Ver</button></div>
+    </div>`;
+
+  // Timeline
+  const timeline = document.getElementById('dash-timeline');
+  if (ocs && ocs.length > 0) {
+    timeline.innerHTML = `
+      <div class="tl"><div class="tl-side"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">NF #7834 entregue — Fast Shop</div><div class="tl-time">há 8min</div></div></div>
+      <div class="tl"><div class="tl-side"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Ocorrência registrada — NF #5512</div><div class="tl-time">há 32min · Unidade CHA</div></div></div>
+      <div class="tl"><div class="tl-side"><div class="tl-dot" style="background:var(--orange)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Reversa solicitada — C&A Brasil · NF #4210</div><div class="tl-time">há 1h12min</div></div></div>
+      <div class="tl"><div class="tl-side"><div class="tl-dot" style="background:var(--blue)"></div></div><div class="tl-body"><div class="tl-title">Programação de coleta recebida — 12 NFs</div><div class="tl-time">há 3h · via e-mail</div></div></div>`;
+  } else {
+    timeline.innerHTML = `
+      <div class="tl"><div class="tl-side"><div class="tl-dot" style="background:var(--blue)"></div></div><div class="tl-body"><div class="tl-title">Plataforma iniciada</div><div class="tl-time">agora</div><div class="tl-desc">Comece registrando ocorrências para ver a atividade aqui.</div></div></div>`;
+  }
+  setLoading(false);
+}
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+function navTo(page) {
+  document.querySelector('.nav-item[data-page="' + page + '"]')?.click();
+}
+
+function fmtDateTime(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+}
 
 function exportOcorrencias() {
   if (ocorrencias.length === 0) { toast('Nenhuma ocorrência para exportar.', 'error'); return; }
-  const header = 'ID,NF,Cliente Dest.,Tipo,Prioridade,Status,Resolucao,Unidade Resp.,Data,Gatilho Ind.,Gatilho DEA,Observacao\n';
+  const header = 'ID,NF,Cliente,Tipo,Prioridade,Status,Unidade,Data,Observacao\n';
   const rows = ocorrencias.map(r =>
-    [r.id, r.nf, r.cliente||'', r.tipo, r.prioridade, r.status||'',
-     r.resolucao_tipo||'', r.unidade_responsavel||r.unidade||'',
-     r.data_ocorrencia||'',
-     r.gatilho_indenizacao ? 'SIM' : '',
-     r.gatilho_reversa_dea ? 'SIM' : '',
-     (r.obs||'').replace(/,/g,';')].join(',')
+    [r.id, r.nf, r.cliente, r.tipo, r.prioridade, r.status, r.unidade||'', r.data_ocorrencia||'', (r.obs||'').replace(/,/g,';')].join(',')
   ).join('\n');
   const blob = new Blob([header + rows], {type:'text/csv'});
   const a = document.createElement('a');
