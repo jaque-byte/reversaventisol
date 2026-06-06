@@ -48,8 +48,8 @@ a{color:var(--blue);text-decoration:none;}
   box-shadow:0 0 0 3px var(--orange-glow);
 }
 .sb-logo-icon svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.sb-logo-text{overflow:hidden;white-space:nowrap;opacity:1;transition:opacity .15s;}
-#sidebar.collapsed .sb-logo-text{opacity:0;pointer-events:none;width:0;}
+.sb-logo-text{overflow:hidden;white-space:nowrap;opacity:1;transition:opacity .15s,width .15s,max-width .22s;}
+#sidebar.collapsed .sb-logo-text{opacity:0;pointer-events:none;width:0;max-width:0;overflow:hidden;}
 .sb-logo-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;color:var(--text);letter-spacing:-.3px;line-height:1.1;}
 .sb-logo-name span{color:var(--orange);}
 .sb-logo-sub{font-size:9px;color:var(--text3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-top:1px;}
@@ -76,15 +76,15 @@ nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;}
 .nav-icon{flex-shrink:0;width:18px;height:18px;display:flex;align-items:center;justify-content:center;}
 .nav-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
 .nav-item.active .nav-icon svg{stroke:var(--item-color,var(--blue));}
-.nav-label{flex:1;transition:opacity .15s,width .15s;}
-#sidebar.collapsed .nav-label{opacity:0;width:0;overflow:hidden;}
+.nav-label{flex:1;transition:opacity .15s,width .15s;overflow:hidden;}
+#sidebar.collapsed .nav-label{opacity:0;width:0;overflow:hidden;flex:0;}
 .nav-badge{
   font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;
   background:rgba(255,255,255,.08);color:var(--text2);flex-shrink:0;
   transition:opacity .15s;
 }
 .nav-item.active .nav-badge{background:var(--item-color,var(--blue));color:#fff;}
-#sidebar.collapsed .nav-badge{opacity:0;pointer-events:none;}
+#sidebar.collapsed .nav-badge{opacity:0;pointer-events:none;width:0;overflow:hidden;padding:0;}
 .sb-footer{
   padding:10px 8px;border-top:1px solid var(--border);flex-shrink:0;
 }
@@ -2325,7 +2325,7 @@ function renderFilterPanel(tab) {
     const dot   = dotFn ? `<span style="${S.dot(item.cor)}"></span>` : '';
     return `<label style="${isLast ? S.rowLast : S.row}">
       <input type="checkbox" ${chk(key,val)} onchange="toggleFilter('${tab}','${key}','${val}',this.checked)" style="accent-color:var(--orange);flex-shrink:0;">
-      ${dot}<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</span>
+      ${dot}<span style="flex:1;min-width:0">${label}</span>
       <span style="${S.cnt}">${cnt}</span>
     </label>`;
   }).join('');
@@ -2339,30 +2339,30 @@ function renderFilterPanel(tab) {
   document.getElementById(tab+'-filter-panel').innerHTML = `
     <div style="${S.grid}">
 
-      <div>
+      <div style="min-width:0;">
         <span style="${S.lbl}">Status</span>
         <div style="${S.scroll}">
           ${mkRow(statuses, 'status', true)}
         </div>
       </div>
 
-      <div>
+      <div style="min-width:0;">
         <span style="${S.lbl}">Unidade</span>
         <div style="${S.scroll}">
           ${mkRow(unis, 'uni', false)}
         </div>
       </div>
 
-      <div>
+      <div style="display:flex;flex-direction:column;min-width:0;">
         <span style="${S.lbl}">Motivo (OP)</span>
-        <div style="display:flex;flex-direction:column;gap:0;max-height:100px;overflow-y:auto;padding-right:4px;margin-bottom:16px;">
+        <div style="display:flex;flex-direction:column;gap:0;max-height:100px;overflow-y:auto;padding-right:4px;margin-bottom:14px;">
           ${mkRow(ops, 'op', false)}
         </div>
         <span style="${S.lbl}">Previsão de coleta</span>
         <div style="${S.col}">
           ${previsaoItems.map((p,i)=>`<label style="${i===previsaoItems.length-1?S.rowLast:S.row}">
             <input type="checkbox" ${chk('previsao',p.v)} onchange="toggleFilter('${tab}','previsao','${p.v}',this.checked)" style="accent-color:var(--orange);flex-shrink:0;">
-            <span style="flex:1">${p.l}</span>
+            <span style="flex:1;min-width:0">${p.l}</span>
           </label>`).join('')}
         </div>
       </div>
