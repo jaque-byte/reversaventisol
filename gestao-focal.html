@@ -344,20 +344,24 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 </style>
 <style>
 /* ── REVERSAS MODULE ── */
-/* Variáveis extras usadas pelo módulo de reversas (sem conflito com o :root global) */
 #page-reversas .main{padding:0;}
-  :root {
-    --surface:   #0E1420;
-    --surface2:  #141B2D;
-    --surface3:  #1A2340;
-    --blue-dark: #1A4FBF;
-    --blue-glow: rgba(37,99,235,.18);
-    --orange-glow: rgba(255,90,0,.15);
-    --radius-sm: 8px;
-    --radius-xs: 5px;
+/* Variáveis locais do módulo de reversas — scoped para não conflitar com o hub */
+#page-reversas,
+.modal-overlay,
+.modal-overlay *,
+.loading-overlay,
+.loading-overlay *,
+.notif {
+    --surface:   var(--surf);
+    --surface2:  var(--surf2);
+    --surface3:  var(--surf3);
+    --blue-dark: var(--blue-dk);
+    --radius-sm: var(--radius);
+    --radius-xs: 7px;
     --shadow:    0 4px 24px rgba(0,0,0,.4);
     --shadow-lg: 0 8px 40px rgba(0,0,0,.6);
-  }
+    --accent:    var(--orange);
+}
 
   /* ── LOADING ─────────────────────────────────────────────────── */
   .loading-overlay { position:fixed;inset:0;background:rgba(8,12,20,.95);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px; }
@@ -598,6 +602,17 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   /* ── ANIMATIONS ──────────────────────────────────────────────── */
   @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
   .fade-in { animation: fadeUp .2s ease; }
+
+  /* ── REV-TIMELINE (modal de detalhe) ─────────────────────────── */
+  .rev-timeline { display:flex; gap:0; margin:18px 0; overflow-x:auto; padding-bottom:4px; }
+  .rev-tl-step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; min-width:64px; }
+  .rev-tl-step:not(:last-child)::after { content:''; position:absolute; top:11px; left:50%; width:100%; height:2px; background:var(--border2); z-index:0; }
+  .rev-tl-step.done:not(:last-child)::after { background:var(--blue); }
+  .rev-tl-dot { width:22px; height:22px; border-radius:50%; border:2px solid var(--border2); background:var(--surf); z-index:1; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:var(--text3); position:relative; }
+  .rev-tl-step.done .rev-tl-dot { background:var(--blue); border-color:var(--blue); color:#fff; }
+  .rev-tl-step.current .rev-tl-dot { border-color:var(--orange); box-shadow:0 0 0 3px var(--orange-glow); background:var(--orange); color:#fff; }
+  .rev-tl-label { font-size:9px; color:var(--text3); margin-top:5px; text-align:center; max-width:64px; line-height:1.3; font-weight:500; }
+  .rev-tl-step.done .rev-tl-label, .rev-tl-step.current .rev-tl-label { color:var(--text2); }
 
   /* ── SECTION HEADER ──────────────────────────────────────────── */
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
@@ -950,7 +965,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       </button>
       <button class="btn btn-ghost btn-sm" onclick="enterSelectMode()">☑ Selecionar</button>
     </div>
-    <div id="painel-filter-panel" style="display:none;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;margin-bottom:14px"></div>
+    <div id="painel-filter-panel" style="display:none;background:var(--surf);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;margin-bottom:14px"></div>
     <div id="painel-active-pills" style="display:none;margin-bottom:12px;flex-wrap:wrap;gap:6px;align-items:center"></div>
     <div id="painel-cards"></div>
   </div>
@@ -967,7 +982,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       </button>
       <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Exportar CSV</button>
     </div>
-    <div id="lista-filter-panel" style="display:none;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;margin-bottom:14px"></div>
+    <div id="lista-filter-panel" style="display:none;background:var(--surf);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;margin-bottom:14px"></div>
     <div id="lista-active-pills" style="display:none;margin-bottom:12px;flex-wrap:wrap;gap:6px;align-items:center"></div>
     <div class="table-wrap">
       <table>
@@ -2270,7 +2285,6 @@ function renderFilterPanel(tab) {
   const uniCount = u => reversas.filter(r=>r.uni===u).length;
   const opCount = o => reversas.filter(r=>r.op===o).length;
 
-  const isLista = tab === 'lista';
   const sortFields = [
     {v:'solicitada',l:'Data de solicitação'},
     {v:'nf',l:'NF'},
@@ -2287,61 +2301,85 @@ function renderFilterPanel(tab) {
   const _sortDir = (f.sortDir !== undefined) ? f.sortDir : -1;
   const _sortFld = f.sortField || 'solicitada';
   const chk = (key, val) => f[key].includes(val) ? 'checked' : '';
-  const lbl = txt => `<div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${txt}</div>`;
+
+  const S = {
+    wrap:  'background:var(--surf);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;',
+    grid:  'display:grid;grid-template-columns:2fr 1fr 1fr 1.6fr;gap:24px;align-items:start;',
+    lbl:   'display:block;font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;',
+    col:   'display:flex;flex-direction:column;gap:0;',
+    scroll:'display:flex;flex-direction:column;gap:0;max-height:200px;overflow-y:auto;padding-right:4px;',
+    row:   'display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text);padding:4px 0;border-bottom:1px solid rgba(30,45,74,.3);',
+    rowLast:'display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text);padding:4px 0;',
+    cnt:   'margin-left:auto;font-size:10px;color:var(--text3);font-weight:600;',
+    dot:   (cor) => `width:7px;height:7px;border-radius:50%;background:${cor};flex-shrink:0;`,
+    sel:   'width:100%;padding:7px 10px;font-size:12px;background:var(--surf2);border:1px solid var(--border2);border-radius:7px;color:var(--text);outline:none;margin-bottom:8px;font-family:inherit;',
+    btnA:  (active) => `flex:1;padding:6px 0;font-size:12px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;font-family:inherit;transition:all .12s;background:${active?'var(--blue)':'var(--surf2)'};color:${active?'#fff':'var(--text2)'};`,
+    foot:  'display:flex;justify-content:space-between;align-items:center;padding-top:14px;margin-top:6px;border-top:1px solid var(--border);',
+  };
+
+  const mkRow = (items, key, dotFn) => items.map((item, i) => {
+    const isLast = i === items.length - 1;
+    const label = typeof item === 'object' ? item.nome : item;
+    const val   = typeof item === 'object' ? item.id   : item;
+    const cnt   = typeof item === 'object' ? statusCount(item.id) : (key==='uni' ? uniCount(item) : opCount(item));
+    const dot   = dotFn ? `<span style="${S.dot(item.cor)}"></span>` : '';
+    return `<label style="${isLast ? S.rowLast : S.row}">
+      <input type="checkbox" ${chk(key,val)} onchange="toggleFilter('${tab}','${key}','${val}',this.checked)" style="accent-color:var(--orange);flex-shrink:0;">
+      ${dot}<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</span>
+      <span style="${S.cnt}">${cnt}</span>
+    </label>`;
+  }).join('');
+
+  const previsaoItems = [
+    {v:'tem', l:'Com previsão definida'},
+    {v:'hoje', l:'Coleta hoje'},
+    {v:'atraso', l:'Em atraso'},
+  ];
 
   document.getElementById(tab+'-filter-panel').innerHTML = `
-    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.5fr;gap:20px;margin-bottom:14px">
+    <div style="${S.grid}">
 
       <div>
-        ${lbl('Status')}
-        <div style="display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto">
-          ${statuses.map(s=>`<label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text)">
-            <input type="checkbox" ${chk('status',s.id)} onchange="toggleFilter('${tab}','status','${s.id}',this.checked)" style="accent-color:var(--orange)">
-            <span style="width:7px;height:7px;border-radius:50%;background:${s.cor};flex-shrink:0"></span>
-            <span style="flex:1">${s.nome}</span><span style="color:var(--text3);font-size:11px">${statusCount(s.id)}</span>
+        <span style="${S.lbl}">Status</span>
+        <div style="${S.scroll}">
+          ${mkRow(statuses, 'status', true)}
+        </div>
+      </div>
+
+      <div>
+        <span style="${S.lbl}">Unidade</span>
+        <div style="${S.scroll}">
+          ${mkRow(unis, 'uni', false)}
+        </div>
+      </div>
+
+      <div>
+        <span style="${S.lbl}">Motivo (OP)</span>
+        <div style="display:flex;flex-direction:column;gap:0;max-height:100px;overflow-y:auto;padding-right:4px;margin-bottom:16px;">
+          ${mkRow(ops, 'op', false)}
+        </div>
+        <span style="${S.lbl}">Previsão de coleta</span>
+        <div style="${S.col}">
+          ${previsaoItems.map((p,i)=>`<label style="${i===previsaoItems.length-1?S.rowLast:S.row}">
+            <input type="checkbox" ${chk('previsao',p.v)} onchange="toggleFilter('${tab}','previsao','${p.v}',this.checked)" style="accent-color:var(--orange);flex-shrink:0;">
+            <span style="flex:1">${p.l}</span>
           </label>`).join('')}
         </div>
       </div>
 
       <div>
-        ${lbl('Unidade')}
-        <div style="display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto">
-          ${unis.map(u=>`<label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text)">
-            <input type="checkbox" ${chk('uni',u)} onchange="toggleFilter('${tab}','uni','${u}',this.checked)" style="accent-color:var(--orange)">
-            <span style="flex:1">${u}</span><span style="color:var(--text3);font-size:11px">${uniCount(u)}</span>
-          </label>`).join('')}
-        </div>
-      </div>
-
-      <div>
-        ${lbl('Motivo (OP)')}
-        <div style="display:flex;flex-direction:column;gap:5px;max-height:100px;overflow-y:auto;margin-bottom:16px">
-          ${ops.map(o=>`<label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text)">
-            <input type="checkbox" ${chk('op',o)} onchange="toggleFilter('${tab}','op','${o}',this.checked)" style="accent-color:var(--orange)">
-            <span style="flex:1">${o}</span><span style="color:var(--text3);font-size:11px">${opCount(o)}</span>
-          </label>`).join('')}
-        </div>
-        ${lbl('Previsão de coleta')}
-        <div style="display:flex;flex-direction:column;gap:5px">
-          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text)"><input type="checkbox" ${chk('previsao','tem')} onchange="toggleFilter('${tab}','previsao','tem',this.checked)" style="accent-color:var(--orange)"> Com previsão definida</label>
-          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text)"><input type="checkbox" ${chk('previsao','hoje')} onchange="toggleFilter('${tab}','previsao','hoje',this.checked)" style="accent-color:var(--orange)"> Coleta hoje</label>
-          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text)"><input type="checkbox" ${chk('previsao','atraso')} onchange="toggleFilter('${tab}','previsao','atraso',this.checked)" style="accent-color:var(--orange)"> Em atraso</label>
-        </div>
-      </div>
-
-      <div>
-        ${lbl('Ordenar por')}
-        <select onchange="setFilterSort('${tab}','field',this.value)" style="width:100%;margin-bottom:8px;padding:8px 10px;font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text);outline:none">
+        <span style="${S.lbl}">Ordenar por</span>
+        <select onchange="setFilterSort('${tab}','field',this.value)" style="${S.sel}">
           ${sortFields.map(sf=>`<option value="${sf.v}" ${_sortFld===sf.v?'selected':''}>${sf.l}</option>`).join('')}
         </select>
         <div style="display:flex;gap:6px">
-          <button onclick="setFilterSort('${tab}','dir',1)" style="flex:1;padding:7px;font-size:12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:${_sortDir===1?'var(--blue)':'var(--surface2)'};color:${_sortDir===1?'#fff':'var(--text2)'};cursor:pointer;font-family:inherit">↑ Crescente</button>
-          <button onclick="setFilterSort('${tab}','dir',-1)" style="flex:1;padding:7px;font-size:12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:${_sortDir===-1?'var(--blue)':'var(--surface2)'};color:${_sortDir===-1?'#fff':'var(--text2)'};cursor:pointer;font-family:inherit">↓ Decrescente</button>
+          <button onclick="setFilterSort('${tab}','dir',1)" style="${S.btnA(_sortDir===1)}">↑ Crescente</button>
+          <button onclick="setFilterSort('${tab}','dir',-1)" style="${S.btnA(_sortDir===-1)}">↓ Decrescente</button>
         </div>
       </div>
 
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border)">
+    <div style="${S.foot}">
       <button class="btn btn-ghost btn-sm" onclick="clearFilters('${tab}')">Limpar tudo</button>
       <button class="btn btn-ghost btn-sm" onclick="toggleFilterPanel('${tab}')">Fechar</button>
     </div>
@@ -2522,12 +2560,12 @@ function openDetalhe(id) {
 
   document.getElementById('modal-title').textContent = `NF ${r.nf} · ${r.cliente}`;
 
-  const timelineHtml = `<div class="timeline">` + statuses.map((s,i) => {
+  const timelineHtml = `<div class="rev-timeline">` + statuses.map((s,i) => {
     const done = i < curIdx;
     const current = i === curIdx;
-    return `<div class="tl-step ${done?'done':''} ${current?'current':''}">
-      <div class="tl-dot">${done?'✓':i+1}</div>
-      <div class="tl-label">${s.nome}</div>
+    return `<div class="rev-tl-step ${done?'done':''} ${current?'current':''}">
+      <div class="rev-tl-dot">${done?'✓':i+1}</div>
+      <div class="rev-tl-label">${s.nome}</div>
     </div>`;
   }).join('') + '</div>';
 
